@@ -6,5 +6,5 @@ SELECT product_name,
        phone
 FROM products JOIN suppliers s on products.supplier_id = s.company_id JOIN categories c on c.category_id = products.category_id
 WHERE (category_name = 'Beverages' OR category_name = 'Seafood')
-    AND discontinued = 1
+    AND discontinued = 0
     AND units_in_stock < 20;

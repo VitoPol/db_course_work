@@ -15,4 +15,4 @@ WHERE ship_country = 'USA';
 
 SELECT sum(unit_price * units_in_stock)
 FROM products
-WHERE discontinued = 1
+WHERE discontinued = 0
