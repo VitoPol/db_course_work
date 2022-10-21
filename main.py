@@ -44,8 +44,8 @@ def add_column_req(req: str, data_list: list, companies: list):
 \n"""
 
     for item in data_list:
-        for i in item["products"]:
-            req = req + f"UPDATE products SET supplier_id = {companies[item['company_name']]} WHERE product_name = '{i}';\n"
+        str_ = str(item['products'])[1:-1].replace('"', "'")
+        req = req + f"UPDATE products SET supplier_id = {companies[item['company_name']]} WHERE product_name IN ({str_});\n"
 
     return req
 
@@ -53,19 +53,19 @@ def add_column_req(req: str, data_list: list, companies: list):
 def get_req_table_suppliers(req:str, data_list: list) -> str:
     req = req + """DROP TABLE IF EXISTS suppliers;
 
-    CREATE TABLE IF NOT EXISTS suppliers (
-                         company_id SERIAL NOT NULL UNIQUE,
-                         company_name VARCHAR,
-                         contact VARCHAR,
-                         address VARCHAR,
-                         city VARCHAR(20),
-                         region VARCHAR(10),
-                         postal_code VARCHAR(20),
-                         country VARCHAR(20),
-                         phone VARCHAR(20),
-                         fax VARCHAR(20),
-                         homepage VARCHAR
-    );
+CREATE TABLE IF NOT EXISTS suppliers (
+                     company_id SERIAL NOT NULL UNIQUE,
+                     company_name VARCHAR,
+                     contact VARCHAR,
+                     address VARCHAR,
+                     city VARCHAR(20),
+                     region VARCHAR(10),
+                     postal_code VARCHAR(20),
+                     country VARCHAR(20),
+                     phone VARCHAR(20),
+                     fax VARCHAR(20),
+                     homepage VARCHAR
+);
 """
     companies = {}
 
@@ -79,7 +79,7 @@ def get_req_table_suppliers(req:str, data_list: list) -> str:
     for i in company_ids:
         companies[i[1].replace("'", "''")] = i[0]
 
-    req = req + add_column_req(req, data_list, companies)
+    req = add_column_req(req, data_list, companies)
 
     cursor.close()
     connection.close()
